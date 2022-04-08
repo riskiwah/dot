@@ -1,0 +1,9 @@
+# Gothings
+# export GOROOT=/usr/local/go
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/code/go
+export PATH="$(go env GOPATH)/bin:${PATH}"
+# export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
+# Krew Path
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"

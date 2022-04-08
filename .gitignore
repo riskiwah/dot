@@ -1,0 +1,6 @@
+# Phew phew
+.ssh
+id_rsa*
+*.pub
+.aws
+.bash_history

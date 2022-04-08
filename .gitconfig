@@ -1,0 +1,16 @@
+[user]
+	name = riskw
+	email = riskiwah@yandex.com
+
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    ui = true
+
+[core]
+    editor = vim
+    excludesfile = ~/.gitignore
+
+[rerere]
+    enabled = true

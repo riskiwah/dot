@@ -1,6 +1,14 @@
-# Phew phew
-.ssh
-id_rsa*
-*.pub
-.aws
-.bash_history
+4ops.packer
+be5invis.toml
+emmanuelbeziat.vscode-great-icons
+golang.go
+hashicorp.terraform
+HookyQR.beautify
+ipedrazas.kubernetes-snippets
+ivory-lab.jenkinsfile-support
+jdinhlife.gruvbox
+ms-azuretools.vscode-docker
+ms-python.python
+ms-python.vscode-pylance
+redhat.vscode-yaml
+Tim-Koehler.helm-intellisense

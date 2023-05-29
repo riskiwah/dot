@@ -37,10 +37,7 @@ font:
     family: Fira Code
     style: Italic
 
-  scale_with_dpi: true
-  use_thin_strokes: false
-
-  size: 10.0
+  size: 8.0
   offset:
     x: 0
     y: 0
@@ -103,7 +100,7 @@ colors:
 bell:
   animation: EaseOutExpo
   duration: 0
-  color: "0xffffff"
+  color: "#ff00ff"
 
 selection:
   semantic_escape_chars: ",?`|:\"' ()[]{}<>\t"

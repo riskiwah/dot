@@ -1,0 +1,10 @@
+configuration {
+        show-icons: true;
+        font: "Fira Code";
+}
+
+listview {
+        lines: 12;
+}
+
+@theme "/usr/share/rofi/themes/gruvbox-dark.rasi"

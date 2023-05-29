@@ -46,5 +46,6 @@
   "security.workspace.trust.untrustedFiles": "open",
   "[html]": {
     "editor.defaultFormatter": "HookyQR.beautify"
-  }
+  },
+  "extensions.ignoreRecommendations": true
 }

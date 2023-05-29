@@ -10,7 +10,13 @@
 
 [core]
     editor = vim
-    excludesfile = ~/.gitignore
+    excludesfile = ~/.gitignore_global
+
+[pull]
+	rebase = true
 
 [rerere]
     enabled = true
+
+[init]
+	defaultBranch = main

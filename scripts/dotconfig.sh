@@ -2,16 +2,9 @@
 
 set -Eeuo pipefail
 
-_configs_dir=(
-    alacritty
-    i3
-    i3status
-    nvim
-    picom
-)
+_configs_dir=$(find "$PWD/.config" -maxdepth 1 -mindepth 1 -type d -printf "%f\n")
 
-for config_dir in "${_configs_dir[@]}"; do \
-    #abc=`realpath "${_configs_dir[@]}" | cut -d'/' -f 6-`
-    mkdir -p "$HOME/.config/${config_dir[*]}"
-    ln -sfn "$PWD/.config/${config_dir[*]}"/* "$HOME/.config/${config_dir[*]}"
+for config_dir in $_configs_dir; do
+    mkdir -p "$HOME/.config/$config_dir"
+    ln -sfn "$PWD/.config/$config_dir/"* "$HOME/.config/$config_dir/"
 done

@@ -1,0 +1,19 @@
+# Run with:
+# sudo systemctl enable wakelock@extroot.service
+#
+
+[Unit]
+Description=i3lock
+Documentation=https://github.com/jessfraz/dotfiles/blob/master/etc/systemd/system/i3lock%40.service
+Documentation=https://www.jvt.me/posts/2019/12/03/lock-before-suspend-systemd/
+Documentation=https://gist.github.com/Raymo111/91ffd256b7aca6a85e8a99d6331d3b7b
+Before=suspend.target
+
+[Service]
+User=%I
+Type=forking
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/i3lock -c 111111
+
+[Install]
+WantedBy=suspend.target

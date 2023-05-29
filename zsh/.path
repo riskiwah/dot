@@ -1,7 +1,7 @@
 # Gothings
 # export GOROOT=/usr/local/go
 export PATH=$PATH:/usr/local/go/bin
-export GOPATH=$HOME/code/go
+export GOPATH=$HOME/playground/go
 export PATH="$(go env GOPATH)/bin:${PATH}"
 # export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 

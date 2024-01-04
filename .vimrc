@@ -1,4 +1,5 @@
 " Default Vim
+colorscheme desert
 set mouse=a
 set encoding=utf-8
 set fileencoding=utf-8
@@ -38,31 +39,3 @@ set clipboard=unnamedplus
 " Syntastic
 set statusline+=%#warningmsg#
 set statusline+=%*
-
-" More better color pls :(
-if has('termguicolors')
-  set termguicolors
-endif
-
-" Alright it's Plugin times
-call plug#begin()
-  Plug 'sainnhe/gruvbox-material'
-  Plug 'preservim/nerdtree'
-call plug#end()
-
-" For dark version.
-set background=dark
-" Available values: 'hard', 'medium'(default), 'soft'
-let g:gruvbox_material_background = 'hard'
-colorscheme gruvbox-material
-
-" NerdTree
-let NERDTreeShowHidden=1
-autocmd VimEnter * NERDTree
-autocmd VimEnter * NERDTree | wincmd p
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
-
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
-    \ execute 'NERDTree' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif

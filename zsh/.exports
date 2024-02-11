@@ -3,6 +3,7 @@ export ZSH="$HOME/.oh-my-zsh"
 
 # history
 export HISTIGNORE=" *:ls:cd:cd -:pwd:exit:date:* --help:* -h:pony:pony add *:pony update *:pony save *:pony ls:pony ls *";
+export HISTCONTROL=erasedups:ignoreboth
 
 # UTF-8
 export LANG="en_US.UTF-8";

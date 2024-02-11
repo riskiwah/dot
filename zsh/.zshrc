@@ -18,7 +18,7 @@ if [[ -n "$ZSH_COMPDUMP"(#qN.mh+24) ]]; then
   compinit -i -d "$ZSH_COMPDUMP"
   compdump
 else
-  compinit -C
+  compinit
 fi
 
 # Compile zshrc

@@ -7,6 +7,7 @@ set ttyfast
 set nocompatible
 set backspace=indent,eol,start
 set nocp digraph sc vb wmnu noeb noet nosol ai
+set autoindent expandtab tabstop=2 shiftwidth=2
 "set ek
 set com=b:#,:%,n:>
 set ww=<,>,h,l

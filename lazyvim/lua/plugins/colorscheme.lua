@@ -1,9 +1,11 @@
 return {
-  { "ellisonleao/gruvbox.nvim" },
+  { "wittyjudge/gruvbox-material.nvim" },
+
+  -- load
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "gruvbox",
+      colorscheme = "gruvbox-material",
     },
   },
 }

@@ -21,16 +21,12 @@ else
   compinit
 fi
 
-# Compile zshrc
-# if [ ! -f ~/.zshrc.zwc ] || [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
-#   zcompile ~/.zshrc
-# fi
-
 # plugin here
 plugins=(git docker docker-compose kubectl gcloud)
 source $ZSH/completions/_kubectl.zsh
 source $ZSH/oh-my-zsh.sh
 
+# pprof
 if [ -n "${ZSH_PROF_ENABLED:-}" ]; then
   zprof
 fi

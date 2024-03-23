@@ -1,6 +1,4 @@
 set $mod Mod4
-set $lockcmd convert ~/Pictures/wallpapers/win11-dark-blur.jpeg RGB:- | i3lock --raw 1920x1200:rgb --image /dev/stdin
-
 font pango:monospace 8, FontAwesome 8
 
 # Use pactl to adjust volume in PulseAudio.
@@ -152,37 +150,6 @@ bar {
 
 smart_gaps on
 
-# Rofi things
-bindsym $mod+d exec rofi -show drun -run-shell-command -font "Fira Code 12" -show-icons -icon-theme "Yaru"
-
-# tab move
-bindsym $mod+Tab workspace next
-bindsym $mod+Shift+Tab workspace prev
-
-# Feh bg
-exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpapers/Cloud_2_Nord.png
-
-# Dunst
-exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
-
-# Lock screen
-bindsym $mod+l exec $lockcmd -c 768591
-
-# Dual display
-exec --no-startup-id /usr/bin/bash ~/.screenlayout/monitor.sh
-
-# Gnome SS
-bindsym Print exec gnome-screenshot -i
-
-# Picom i3
-exec_always --no-startup-id /usr/bin/picom --config $HOME/.config/picom/config -f --xrender-fence
-
-# exec batt notify
-exec --no-startup-id /usr/bin/cbatticon
-
-# libinput gestures
-exec --no-startup-id libinput-gestures-setup start
-
 # Hidden title bar
 default_border pixel 0
 default_floating_border pixel 0
@@ -203,3 +170,35 @@ client.urgent           #d79921 #d79921 #d79921 #d79921   $focused_border
 client.placeholder      #d79921 #d79921 #d79921 #d79921   #d79921
 
 client.background       #d79921
+
+# Rofi things
+bindsym $mod+d exec rofi -show drun -run-shell-command -font "Fira Code 12" -show-icons -icon-theme "Yaru"
+
+# tab move
+bindsym $mod+Tab workspace next
+bindsym $mod+Shift+Tab workspace prev
+
+# Feh bg
+exec_always --no-startup-id feh --bg-scale ~/Pictures/2/exporter/amber-l-492087aedbb7a4fbe5e997c88b1ac3568fc992fa.jpg
+
+# Dunst
+exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
+
+# Lock screen
+set $lockcmd convert ~/Pictures/wallpapers/win11-dark-blur.jpeg RGB:- | i3lock --raw 1920x1200:rgb --image /dev/stdin
+bindsym $mod+l exec $lockcmd -c 768591
+
+# Dual display
+# exec --no-startup-id /usr/bin/bash ~/.screenlayout/monitor.sh
+
+# Gnome SS
+bindsym Print exec gnome-screenshot -i
+
+# Picom i3
+exec_always --no-startup-id /usr/bin/picom --config $HOME/.config/picom/config -f --xrender-fence
+
+# exec batt notify
+exec --no-startup-id /usr/bin/cbatticon
+
+# libinput gestures
+exec --no-startup-id libinput-gestures-setup start

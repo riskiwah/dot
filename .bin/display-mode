@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# generated from arandr gui :)
+# todos:
+# - dry repeat `--off` DP 
+# - mirrors
+
+help() {
+cat <<EOF >&2
+    Usage:
+    display-mode <options>
+
+    --primary       primary display only (eDP-1)
+    --dual          dual display with type-C (eDP-1 and DP-1)
+    --hdmi          dual display with HDMI (eDP-1 and HDMI-1)
+    --mirror        mirror display; [tbd] carefull! (eDP-1 and DP-1)
+EOF
+}
+
+case "$1" in
+    --primary)
+        xrandr --output eDP-1 --primary --mode 1920x1200 --pos 0x0 --rotate normal --rate 60
+        ;;
+    --dual)
+        xrandr \
+            --output eDP-1 --primary --mode 1920x1200 --pos 0x1080 --rotate normal --rate 60 \
+            --output DP-1 --mode 1920x1080 --pos 0x0 --rotate normal --rate 74 \
+            --output HDMI-1 --off --output DP-2 --off --output DP-3 --off --output DP-4 --off
+        ;;
+    --hdmi)
+        xrandr \
+            --output eDP-1 --primary --mode 1920x1200 --pos 0x1080 --rotate normal --rate 60 \
+            --output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate normal --rate 60 \
+            --output DP-1 --off --output DP-2 --off --output DP-3 --off --output DP-4 --off
+        ;;
+    # need some tunning for this mirrors
+    --mirror)
+        xrandr \
+            --output eDP-1 --mode "1920x1080" --output DP-1 --mode "1920x1080" --scale 1x1 --panning 1920x1080
+        ;;
+    *)
+        help
+        exit 1
+        ;;
+esac

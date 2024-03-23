@@ -1,9 +1,11 @@
-# Gothings
+# for fun .bin
+export PATH="$HOME/.bin:$PATH"
+# Go
 # export GOROOT=/usr/local/go
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/playground/go
 export PATH="$(go env GOPATH)/bin:${PATH}"
 # export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
-# Krew Path
+# Krew kubectl path
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"

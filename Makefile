@@ -16,3 +16,9 @@ baseroot: ## baseroot
 
 zsh: ## zsh
 	@bash $(CURDIR)/scripts/dotzsh.sh
+
+dotbin: ## check .bin exist then symlink it
+	if [ ! -d $(HOME)/.bin ]; then \
+		mkdir -p $(HOME)/.bin; \
+	fi;
+	ln -sfn "$(PWD)/.bin"/* "$(HOME)/.bin";

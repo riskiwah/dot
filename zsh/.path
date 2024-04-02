@@ -1,5 +1,6 @@
 # for fun .bin
 export PATH="$HOME/.bin:$PATH"
+
 # Go
 # export GOROOT=/usr/local/go
 export PATH=$PATH:/usr/local/go/bin

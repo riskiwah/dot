@@ -15,6 +15,9 @@ export MANPAGER="less -X";
 # TERM
 export TERM=xterm-256color
 
+# kube editor
+export KUBE_EDITOR=nvim
+
 # GEM
 export GEM_HOME="$HOME/code/gems"
 export PATH="$HOME/code/gems/bin:$PATH"

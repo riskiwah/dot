@@ -28,7 +28,6 @@
     "**/log": true,
     "**/public/uploads": true
   },
-  "workbench.activityBar.visible": true,
   "workbench.statusBar.visible": true,
   "go.formatTool": "goimports",
   "editor.renderWhitespace": "all",
@@ -41,7 +40,7 @@
   "workbench.editorAssociations": {
     "*.ipynb": "jupyter.notebook.ipynb"
   },
-  "workbench.colorTheme": "Gruvbox Dark Hard",
+  "workbench.colorTheme": "Gruvbox Material Dark",
   "security.workspace.trust.untrustedFiles": "open",
   "[html]": {
     "editor.defaultFormatter": "HookyQR.beautify"
@@ -66,5 +65,11 @@
     "vs-kubernetes.local-tunnel-debug-provider": "",
     "checkForMinikubeUpgrade": true,
     "imageBuildTool": "Docker"
-  }
+  },
+  "workbench.editor.enablePreview": false,
+  "window.restoreWindows": "preserve",
+  "telemetry.telemetryLevel": "off",
+  "gruvboxMaterial.darkContrast": "hard",
+  "gruvboxMaterial.darkSelection": "orange",
+  "gruvboxMaterial.darkWorkbench": "high-contrast"
 }

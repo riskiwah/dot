@@ -102,15 +102,18 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-mode "[E]xit [S]leep" {
-        bindsym e exit
+set $exit_mode Exit Mode: [E] exit (logout), [S] sleep, [R] reboot, [T] turnoff
+mode "$exit_mode" {
+        bindsym e exec --no-startup-id i3-msg exit; mode "default"
         bindsym s exec --no-startup-id systemctl suspend; mode "default"
+        bindsym r exec --no-startup-id systemctl reboot, mode "default"
+        bindsym t exec --no-startup-id systemctl poweroff -i, mode "default"
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
 
-bindsym $mod+Shift+e mode "[E]xit [S]leep"
+bindsym $mod+Shift+e mode "$exit_mode"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {

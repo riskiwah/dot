@@ -6,8 +6,8 @@ Xft.autohint: true
 Xft.hintstyle: hintslight
 Xft.lcdfilter: lcddefault
 
-# Gruvbox
-# Sources: https://codeberg.org/hannenz/dotfiles/src/commit/e5bfaaccc3cd419ce4996d94c928a2e82c2e1823/files/.Xresources.d/gruvbox-dark.xresources
+! Gruvbox
+! Sources: https://codeberg.org/hannenz/dotfiles/src/commit/e5bfaaccc3cd419ce4996d94c928a2e82c2e1823/files/.Xresources.d/gruvbox-dark.xresources
 
 ! hard contrast: *background: #1d2021
 *background: #282828

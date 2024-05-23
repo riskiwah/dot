@@ -1,5 +1,5 @@
 # Aliases
-alias turnoff="sudo shutdown -h now"
+alias turnoff="systemctl poweroff -i"
 alias cleanup="sync;sudo sysctl -w vm.drop_caches=3"
 alias myip="curl -s ipinfo.io | jq"
 alias reload=". ~/.zshrc && exec $SHELL -l"

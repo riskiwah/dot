@@ -161,6 +161,7 @@ gaps outer 0
 smart_gaps on
 
 for_window [class="^.*"] border pixel 1
+for_window [floating] resize set 960 540
 
 set $unfocused_border #24292f
 set $focused_border #d79921
@@ -182,7 +183,7 @@ bindsym $mod+Tab workspace next
 bindsym $mod+Shift+Tab workspace prev
 
 # Feh bg
-exec_always --no-startup-id feh --bg-scale ~/Pictures/2/exporter/amber-l-492087aedbb7a4fbe5e997c88b1ac3568fc992fa.jpg
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/nature-13.jpg
 
 # Dunst
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc

@@ -9,6 +9,8 @@ xrender-sync-fence = true;
 
 glx-use-copysubbuffer-mesa = true;
 glx-no-stencil = true;
+glx-copy-from-front = true;
+glx-swap-method = 2;
 glx-no-rebind-pixmap = false;
 
 mark-wmwin-focused = true;
@@ -16,3 +18,5 @@ mark-ovredir-focused = true;
 unredir-if-possible = false;
 refresh-rate = 0;
 use-damage = true;
+
+unredir-if-possible = false;

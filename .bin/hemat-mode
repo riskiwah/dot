@@ -1,0 +1,48 @@
+#!/bin/bash
+
+systemd_services=(
+  containerd.service
+  docker.service
+  docker.socket
+)
+
+stop_systemd() {
+  echo "stopping set of list systemd services"
+  sudo -s -- <<EOF
+  systemctl stop ${systemd_services[@]}
+EOF
+}
+
+start_systemd() {
+  echo "starting set of list systemd services"
+  sudo -s -- <<EOF
+  systemctl start ${systemd_services[@]}
+EOF
+}
+
+usage() {
+  echo "Usage: hemat-mode <true|false>"
+  echo "  true  - stop set list of systemd services"
+  echo "  false - start set list of systemd services"
+  exit 1
+}
+
+main() {
+  if [ $# -ne 1 ]; then
+    usage
+  fi
+
+  case "$1" in
+    true)
+      stop_systemd
+      ;;
+    false)
+      start_systemd
+      ;;
+    *)
+      usage
+      ;;
+  esac
+}
+
+main "$@"

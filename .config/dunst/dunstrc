@@ -17,26 +17,27 @@
     #
     # If this option is set to mouse or keyboard, the monitor option
     # will be ignored.
-    follow = none
+    follow = mouse
 
     ### Geometry ###
 
     # dynamic width from 0 to 300
-    # width = (0, 300)
+    #width = (0, 300)
+    width = 350
     # constant width of 300
-    width = 300
+    # width = 300
 
     # The maximum height of a single notification, excluding the frame.
-    height = 300
+    #height = 300
 
     # Position the notification in the top right corner
-    origin = bottom-right
+    origin = top-right
 
     # Offset from the origin
-    offset = 30x40
+    offset = 48x48
 
     # Scale factor. It is auto-detected if value is 0.
-    scale = 0
+    #scale = 0
 
     # Maximum number of notification (0 means no limit)
     notification_limit = 5

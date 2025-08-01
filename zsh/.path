@@ -10,3 +10,7 @@ export PATH="$(go env GOPATH)/bin:${PATH}"
 
 # Krew kubectl path
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+# Rust
+export PATH="$HOME/.cargo/bin:$PATH"
+

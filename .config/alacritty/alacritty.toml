@@ -137,7 +137,8 @@ program = "/bin/zsh"
 #program = "xdg-open"
 
 [window]
-decorations = "full"
+decorations = "None"
+opacity = 0.98
 dynamic_padding = true
 startup_mode = "Maximized"
 title = "Terminal"

@@ -181,7 +181,7 @@ bindsym $mod+Shift+Tab workspace prev
 set $lockcmd convert ~/Pictures/wallpapers/win11-dark-blur.jpeg RGB:- | i3lock --raw 1920x1200:rgb --image /dev/stdin
 bindsym $mod+l exec $lockcmd -c 768591
 
-exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/nature-13.jpg
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/beach.png
 exec_always --no-startup-id autotiling
 exec_always --no-startup-id /usr/bin/picom --config $HOME/.config/picom/config -f --xrender-fence
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc

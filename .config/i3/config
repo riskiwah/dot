@@ -163,6 +163,8 @@ smart_gaps on
 
 for_window [class=".*"] border pixel 2
 for_window [floating] resize set 960 540
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="task_dialog"] floating enable
 
 # class                 border  bground text    indicator child_border
 client.focused          #d79921 #d79921 #ebdbb2 #d79921   #d79921
@@ -178,8 +180,7 @@ bindsym $mod+Tab workspace next
 bindsym $mod+Shift+Tab workspace prev
 
 # Lock screen
-set $lockcmd convert ~/Pictures/wallpapers/win11-dark-blur.jpeg RGB:- | i3lock --raw 1920x1200:rgb --image /dev/stdin
-bindsym $mod+l exec $lockcmd -c 768591
+bindsym $mod+l exec betterlockscreen -l
 
 exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/beach.png
 exec_always --no-startup-id autotiling

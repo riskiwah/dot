@@ -22,5 +22,8 @@ export KUBE_EDITOR=nvim
 export GEM_HOME="$HOME/code/gems"
 export PATH="$HOME/code/gems/bin:$PATH"
 
+# GPG
+export GPG_TTY=$(tty)
+
 # Font
 export FREETYPE_PROPERTIES="cff:no-stem-darkening=0 autofitter:no-stem-darkening=0"

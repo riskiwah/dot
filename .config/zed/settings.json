@@ -26,7 +26,7 @@
     },
     "YAML": {
       "formatter": "language_server",
-      "hard_tabs": true,
+      "hard_tabs": false,
       "tab_size": 2,
     },
   },
@@ -40,6 +40,7 @@
     "edit_prediction_provider": "zed",
   },
   "tab_size": 2,
+  "hard_tabs": false,
   "vim_mode": true,
   "disable_ai": false,
   "cursor_shape": "block",
@@ -116,7 +117,12 @@
           },
           "completion": true,
           "schemas": {
-            "kubernetes": "**.yaml",
+            "kubernetes": [
+              "**/*deployment*.yaml",
+              "**/*deployment*.yml",
+              "**/*service*.yaml",
+              "**/*service*.yml",
+            ],
           },
         },
       },

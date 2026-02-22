@@ -7,6 +7,17 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "agent": {
+    "favorite_models": [],
+    "inline_assistant_model": {
+      "provider": "copilot_chat",
+      "model": "claude-haiku-4.5",
+    },
+    "model_parameters": [],
+  },
+  "edit_predictions": {
+    "provider": "zed",
+  },
   "inlay_hints": {
     "enabled": true,
   },
@@ -35,9 +46,6 @@
   },
   "git_panel": {
     "dock": "right",
-  },
-  "features": {
-    "edit_prediction_provider": "zed",
   },
   "tab_size": 2,
   "hard_tabs": false,
@@ -103,6 +111,16 @@
     "env": [".env", ".env.*"],
     "Dockerfile": ["Dockerfile", "Dockerfile.*"],
     "JSON": ["json", "jsonc", "*.code-snippets"],
+    "Helm": [
+      "**/templates/**/*.tpl",
+      "**/templates/**/*.yaml",
+      "**/templates/**/*.yml",
+      "**/Chart.yaml",
+      "**/values.yaml",
+      "**/values*.yaml",
+      "**/values*.yml",
+      "**/helmfile*.yaml",
+    ],
   },
 
   "ui_font_size": 16,
@@ -112,11 +130,18 @@
     "yaml-language-server": {
       "settings": {
         "yaml": {
+          "validate": true,
+          "hover": true,
           "schemaStore": {
             "enable": true,
+            "url": "https://www.schemastore.org/api/json/catalog.json",
           },
           "completion": true,
           "schemas": {
+            "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/inventory.json": [
+              "./inventory/*.yaml",
+              "hosts.yml",
+            ],
             "kubernetes": [
               "**/*deployment*.yaml",
               "**/*deployment*.yml",

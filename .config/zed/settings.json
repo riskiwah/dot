@@ -28,10 +28,24 @@
     "show": "never",
   },
   "vim": {
+    "use_system_clipboard": "always",
     "use_smartcase_find": true,
     "toggle_relative_line_numbers": true,
   },
   "languages": {
+    "Plain Text": {
+      "soft_wrap": "preferred_line_length",
+    },
+    "Go": {
+      "tab_size": 4,
+      "hard_tabs": true,
+      "code_actions_on_format": {
+        "source.organizeImports": true,
+      },
+    },
+    "Make": {
+      "hard_tabs": true,
+    },
     "Markdown": {
       "soft_wrap": "editor_width",
     },
@@ -39,6 +53,10 @@
       "formatter": "language_server",
       "hard_tabs": false,
       "tab_size": 2,
+    },
+    "JSON": {
+      "tab_size": 2,
+      "format_on_save": "off",
     },
   },
   "gutter": {

@@ -7,6 +7,14 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "terminal": {
+    "font_family": "JetBrainsMono Nerd Font"
+  },
+  "agent_servers": {
+    "claude-acp": {
+      "type": "registry"
+    }
+  },
   "project_panel": {
     "dock": "left"
   },
@@ -17,6 +25,12 @@
     "dock": "left"
   },
   "agent": {
+    "default_model": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-6-latest",
+      "enable_thinking": true,
+      "effort": "high"
+    },
     "dock": "right",
     "favorite_models": [],
     "inline_assistant_model": {
@@ -153,7 +167,7 @@
 
   "ui_font_size": 16,
   "buffer_font_size": 15.0,
-  "theme": "Gruvbox Material",
+  "theme": "Gruvbox Dark Hard",
   "lsp": {
     "yaml-language-server": {
       "settings": {

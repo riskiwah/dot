@@ -27,7 +27,7 @@ open = [
 [open]
 rules = [
   # Folder
-  { name = "*/", use = ["edit", "open", "reveal"] },
+  #{ name = "*/", use = ["edit", "open", "reveal"] },
   # Text
   { mime = "text/*", use = ["edit", "reveal"] },
   # Image
@@ -42,5 +42,5 @@ rules = [
   # Empty file
   { mime = "inode/empty", use = ["edit", "reveal"] },
   # Fallback
-  { name = "*", use = ["open", "reveal"] },
+  #{ name = "*", use = ["open", "reveal"] },
 ]

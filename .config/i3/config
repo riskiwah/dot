@@ -192,7 +192,7 @@ bindsym $mod+Shift+Tab workspace prev
 # Lock screen
 bindsym $mod+l exec betterlockscreen -l
 
-exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/beach.png
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/blue-plant.png
 exec_always --no-startup-id autotiling
 exec_always --no-startup-id /usr/bin/picom --config $HOME/.config/picom/config -f --xrender-fence
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc

@@ -1,0 +1,37 @@
+sensors:
+  # CPU
+  - hwmon: /sys/class/hwmon
+    name: coretemp
+    indices: [1, 2, 6, 10, 11, 12, 13, 14, 15, 16, 17]
+  # Chassis
+  - hwmon: /sys/class/hwmon
+    name: thinkpad
+    indices: [3, 5, 6, 7]
+  # SSD
+  - hwmon: /sys/class/hwmon
+    name: nvme
+    indices: [1, 2, 3]
+    correction: [-5, 0, 0]
+  # MB
+  - hwmon: /sys/class/hwmon
+    name: acpitz
+    indices: [1]
+  # Wifi
+  - hwmon: /sys/class/hwmon
+    name: iwlwifi_1
+    indices: [1]
+
+fans:
+  - tpacpi: /proc/acpi/ibm/fan
+    max_errors: 10
+
+levels:
+  - [0, 0, 39]
+  - [1, 39, 52]
+  - [2, 51, 55]
+  - [3, 54, 58]
+  - [4, 56, 66]
+  - [5, 64, 70]
+  - [6, 68, 80]
+  - [7, 79, 86]
+  - [127, 84, 32767]

@@ -1,15 +1,23 @@
-# Aliases
-alias turnoff="systemctl poweroff -i"
-alias cleanup="sync;sudo sysctl -w vm.drop_caches=3"
 alias myip="curl -s ipinfo.io | jq"
 alias reload=". ~/.zshrc && exec $SHELL -l"
-alias ls="ls -lF --color=auto"
 alias k="kubectl"
 #alias kubectx="switcher"
 #alias kctx="switcher"
-alias zed="zeditor"
+(( $+commands[zed] )) || { (( $+commands[zeditor] )) && alias zed="zeditor" }
 alias bye="clear; exit"
 alias sudo="sudo "
 alias vim="nvim"
-alias pbcopy="xclip -selection clipboard"
-alias power-profile="cat /sys/firmware/acpi/platform_profile"
+
+# $OSTYPE is a zsh builtin parameter, so this branch costs no `uname` fork.
+if [[ $OSTYPE == darwin* ]]; then
+  alias ls="ls -lFG"
+  alias turnoff="sudo shutdown -h now"
+  alias cleanup="sudo purge"
+else
+  alias ls="ls -lF --color=auto"
+  alias turnoff="systemctl poweroff -i"
+  alias cleanup="sync;sudo sysctl -w vm.drop_caches=3"
+  alias pbcopy="xclip -selection clipboard"
+  alias pbpaste="xclip -selection clipboard -o"
+  alias power-profile="cat /sys/firmware/acpi/platform_profile"
+fi

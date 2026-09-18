@@ -1,16 +1,20 @@
 # for fun .bin
 export PATH="$HOME/.bin:$PATH"
 
+for _brew_prefix in /opt/homebrew /usr/local; do
+  if [[ -x $_brew_prefix/bin/brew ]]; then
+    export PATH="$_brew_prefix/bin:$_brew_prefix/sbin:$PATH"
+    break
+  fi
+done
+unset _brew_prefix
+
 # Go
-# export GOROOT=/usr/local/go
-export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/playground/go
-export PATH="$(go env GOPATH)/bin:${PATH}"
-# export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+export PATH="$GOPATH/bin:$PATH:/usr/local/go/bin"
 
 # Krew kubectl path
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # Rust
 export PATH="$HOME/.cargo/bin:$PATH"
-

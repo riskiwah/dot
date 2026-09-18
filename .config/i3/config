@@ -105,7 +105,7 @@ bindsym $mod+Shift+r restart
 set $exit_mode Exit Mode: [E] exit (logout), [S] sleep, [R] reboot, [T] turnoff
 mode "$exit_mode" {
   bindsym e exec --no-startup-id i3-msg exit; mode "default"
-  bindsym s exec --no-startup-id systemctl suspend; mode "default"
+  bindsym s exec --no-startup-id systemctl suspend-then-hibernate; mode "default"
   bindsym r exec --no-startup-id systemctl reboot, mode "default"
   bindsym t exec --no-startup-id systemctl poweroff -i, mode "default"
   # back to normal: Enter or Escape
@@ -192,7 +192,7 @@ bindsym $mod+Shift+Tab workspace prev
 # Lock screen
 bindsym $mod+l exec betterlockscreen -l
 
-exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/blue-plant.png
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/catto.jpg
 exec_always --no-startup-id autotiling
 exec_always --no-startup-id /usr/bin/picom --config $HOME/.config/picom/config -f --xrender-fence
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc

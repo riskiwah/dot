@@ -18,3 +18,6 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # Rust
 export PATH="$HOME/.cargo/bin:$PATH"
+
+# Bun
+export PATH="/home/extroot/.bun/bin:$PATH"

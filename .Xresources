@@ -2,7 +2,11 @@ Xft.dpi: 96
 Xft.antialias: 1
 Xft.hinting: true
 Xft.rgba: rgb
-Xft.autohint: true
+! 0 = keep the hinting bytecode shipped in the font itself. The auto-hinter
+! would override hintslight below and degrade well-hinted faces such as
+! JetBrains Mono Nerd Font. Avoid apostrophes here: xrdb runs this file
+! through cpp, which warns about an unterminated quote character.
+Xft.autohint: 0
 Xft.hintstyle: hintslight
 Xft.lcdfilter: lcddefault
 

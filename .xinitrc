@@ -32,4 +32,7 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
-exec i3
+# emptty (XINITRC_LAUNCH=true) passes the chosen session as "$@"; honour it so
+# picking a non-i3 session actually starts that session. i3 stays the default
+# for bare `startx`, which passes no argument.
+exec "${@:-i3}"

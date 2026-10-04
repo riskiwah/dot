@@ -1,0 +1,23 @@
+# prepend_keymap is merged ahead of yazi's defaults, so these win on conflict
+# while every unlisted default key still works. Only non-default bindings live
+# here on purpose — o/O, v/V, r, ;/:, H/L and g<Space> already do the vim-ish
+# thing out of the box, and restating them just creates drift.
+#
+# yazi 26 passes files via %-placeholders, NOT shell positionals: %s = every
+# selected path (the hovered one when nothing is selected), %h = hovered only.
+# `"$@"` silently expands to nothing here, which opens an empty editor buffer.
+[mgr]
+prepend_keymap = [
+  # Force the editor regardless of which [open].rules entry would have matched
+  # (images, archives, unknown mimes). --block hands the terminal to the editor.
+  { on = "E", run = "shell '${EDITOR:-nvim} %s' --block", desc = "Edit in $EDITOR" },
+
+  # Open the hovered directory as an editor project instead of cd-ing into it.
+  # %h, not %s: a selection elsewhere in the pane must not drag files along.
+  { on = ["g", "e"], run = "shell '${EDITOR:-nvim} %h' --block", desc = "Open dir in $EDITOR" },
+
+  # Rename variants yazi has no default for; plain `r` stays bulk-rename-capable
+  # (select several files, press r, yazi opens the list in $EDITOR).
+  { on = "R", run = "rename --empty=all --cursor=start", desc = "Rename from scratch" },
+  { on = "A", run = "rename --cursor=end", desc = "Append to filename" },
+]

@@ -15,6 +15,11 @@ export MANPAGER="less -X";
 # kube editor
 export KUBE_EDITOR=nvim
 
+# default editor — yazi's bulk rename (r on a multi-selection) and most TUIs
+# read $EDITOR/$VISUAL directly, not yazi's opener config
+export EDITOR=nvim
+export VISUAL=nvim
+
 # GEM
 export GEM_HOME="$HOME/code/gems"
 export PATH="$HOME/code/gems/bin:$PATH"

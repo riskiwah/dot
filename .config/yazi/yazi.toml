@@ -1,7 +1,12 @@
 [mgr]
 ratio = [2, 4, 3]
 sort_by = "natural"
+sort_dir_first = true
 show_hidden = true
+# Keep 3 rows of context above/below the hovered file so arrow/jump keys don't
+# leave the cursor glued to the pane edge.
+scrolloff = 3
+linemode = "size"
 
 [preview]
 tab_size = 2
@@ -15,32 +20,54 @@ sixel_fraction = 15
 ueberzug_scale = 1
 ueberzug_offset = [0, 0, 0, 0]
 
+# Defining an opener key here REPLACES yazi's default for that key only, so every
+# name referenced by [open].rules below must exist in this table — a rule pointing
+# at an undefined opener silently does nothing when you press Enter.
+#
+# yazi 26 passes files via %-placeholders, NOT shell positionals: %s = every
+# selected path (the hovered one when nothing is selected), %sN = the Nth,
+# %d1 = dirname of the first. The old `"$@"` form silently expands to nothing,
+# which launches the editor on an empty buffer.
 [opener]
 edit = [
-  { run = 'nvim "$@"', desc = "nvim", block = true, for = "unix" },
+  # $EDITOR wins so yazi matches the rest of the shell; nvim is the fallback.
+  # block = true hands the terminal over to the editor instead of detaching it.
+  { run = '${EDITOR:-nvim} %s', desc = "editor", block = true, for = "unix" },
 ]
 
 open = [
-  { run = 'xdg-open "$1"', desc = "Open", for = "linux" },
+  { run = 'xdg-open %s1', desc = "Open", for = "linux" },
+]
+
+reveal = [
+  { run = 'xdg-open %d1', desc = "Reveal in dir", for = "linux" },
+  { run = 'exiftool %s1; echo "Press enter to exit"; read _', desc = "Show EXIF", block = true, for = "unix" },
+]
+
+extract = [
+  { run = 'ya emit plugin extract -- %s', desc = "Extract here", for = "unix" },
 ]
 
 [open]
 rules = [
   # Folder
-  #{ name = "*/", use = ["edit", "open", "reveal"] },
+  { url = "*/", use = ["edit", "open", "reveal"] },
   # Text
   { mime = "text/*", use = ["edit", "reveal"] },
   # Image
   { mime = "image/*", use = ["open", "reveal"] },
-  # Media
-  { mime = "{audio,video}/*", use = ["play", "reveal"] },
+  # Media — no mpv here, so hand off to the desktop MIME handler
+  { mime = "{audio,video}/*", use = ["open", "reveal"] },
   # Archive
   { mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", use = ["extract", "reveal"] },
   # JSON
   { mime = "application/{json,ndjson}", use = ["edit", "reveal"] },
   { mime = "*/javascript", use = ["edit", "reveal"] },
+  # Config / script files that libmagic reports as application/* rather than text/*
+  { mime = "application/{x-shellscript,x-perl,x-python*,x-ruby,toml,yaml,x-yaml,xml,sql}", use = ["edit", "reveal"] },
   # Empty file
-  { mime = "inode/empty", use = ["edit", "reveal"] },
-  # Fallback
-  #{ name = "*", use = ["open", "reveal"] },
+  { mime = "inode/{empty,x-empty}", use = ["edit", "reveal"] },
+  # Fallback: anything unrecognised is still editable instead of doing nothing.
+  # Must stay last — the first matching rule wins.
+  { url = "*", use = ["edit", "open", "reveal"] },
 ]

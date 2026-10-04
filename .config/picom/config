@@ -9,7 +9,17 @@ fade-out-step = 0.08;
 fade-delta = 8;
 no-fading-openclose = false;
 
-mark-wmwin-focused = true;
-mark-ovredir-focused = true;
+# mark-wmwin-focused / mark-ovredir-focused removed: picom ignores both once
+# rules{} below exists, and warns on every start. They only ever fed the
+# active-window concept, and no inactive-opacity or inactive-dim is set here,
+# so nothing changes visually. Re-add them only by dropping rules{} entirely.
 unredir-if-possible = false;
 refresh-rate = 0;
+
+# xterm has no opacity resource of its own, so window.opacity = 0.98 from
+# alacritty.toml has to be reproduced by the compositor. Matches the class
+# uxterm sets via -class UXTerm; plain xterm is left fully opaque.
+# rules{} is picom 12+ syntax - the old opacity-rule[] is deprecated here.
+rules = (
+  { match = "class_g = 'UXTerm'"; opacity = 0.98; }
+);

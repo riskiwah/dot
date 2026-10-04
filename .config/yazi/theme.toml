@@ -1,0 +1,5 @@
+# Activates the flavor already pinned in package.toml. Without this block the
+# downloaded flavor sits in flavors/ unused and yazi renders its built-in theme.
+[flavor]
+dark = "gruvbox-dark"
+light = "gruvbox-dark"

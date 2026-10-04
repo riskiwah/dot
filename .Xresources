@@ -13,8 +13,9 @@ Xft.lcdfilter: lcddefault
 ! Gruvbox
 ! Sources: https://codeberg.org/hannenz/dotfiles/src/commit/e5bfaaccc3cd419ce4996d94c928a2e82c2e1823/files/.Xresources.d/gruvbox-dark.xresources
 
-! hard contrast: *background: #1d2021
-*background: #282828
+! hard contrast, matches colors.primary.background in .config/alacritty/alacritty.toml
+*background: #1d2021
+! medium contrast: *background: #282828
 ! soft contrast: *background: #32302f
 *foreground: #ebdbb2
 ! Black + DarkGrey
@@ -41,3 +42,81 @@ Xft.lcdfilter: lcddefault
 ! LightGrey + White
 *color7:  #a89984
 *color15: #ebdbb2
+
+! The 16 palette entries above stay loose (*colorN) on purpose. They are only
+! read by uxterm because no *customization: -color line exists in this file: the
+! XTerm-color app-defaults file declares the more specific *VT100*colorN and
+! would silently win over these, repainting every terminal in stock red3/green3.
+! Do not add a customization line without moving the palette to UXTerm*vt100.*.
+
+! --- uxterm, kept in step with .config/alacritty/alacritty.toml ---------------
+! uxterm execs: xterm -class UXTerm -u8
+! so the only prefixes that reach it are UXTerm (class), xterm (instance name)
+! and bare *. An XTerm*... prefix matches NOTHING here - it is a silent no-op.
+
+! Xft instead of the misc-fixed bitmap font that UXTerm app-defaults pins.
+UXTerm*vt100.renderFont: true
+! JetBrainsMono rather than alacritty font.normal (Fira Code): Fira Code ships
+! no italic face, so markdown emphasis in vim renders upright. Verify any swap
+! with fc-match "<family>:italic" before changing this.
+UXTerm*vt100.faceName: JetBrainsMono Nerd Font Mono
+UXTerm*vt100.faceSize: 13
+! Ctrl +/- steps through these; without all of them xterm falls back to
+! cycling the bitmap fonts and the window jumps size.
+UXTerm*vt100.faceSize1: 8
+UXTerm*vt100.faceSize2: 10
+UXTerm*vt100.faceSize3: 11
+UXTerm*vt100.faceSize4: 15
+UXTerm*vt100.faceSize5: 17
+UXTerm*vt100.faceSize6: 20
+UXTerm*vt100.faceSize7: 24
+! Real bold face exists, so do not let xterm overstrike to fake it.
+UXTerm*vt100.boldMode: false
+
+! Truecolor for vim termguicolors. Overrides the plain "xterm" default termName.
+UXTerm*termName: xterm-256color
+
+! window.padding x/y = 3
+UXTerm*vt100.internalBorder: 3
+UXTerm*vt100.borderWidth: 0
+UXTerm*vt100.scrollBar: false
+! scrolling.history = 10000
+UXTerm*vt100.saveLines: 10000
+! Do not yank the view back to the bottom on output while reading scrollback.
+UXTerm*vt100.scrollTtyOutput: false
+UXTerm*vt100.scrollKey: true
+! colors.cursor = CellForeground
+UXTerm*vt100.cursorColor: #ebdbb2
+UXTerm*vt100.cursorBlink: false
+! mouse.hide_when_typing = true
+UXTerm*vt100.pointerMode: 2
+! bell.duration = 0
+UXTerm*vt100.bellIsUrgent: false
+UXTerm*vt100.visualBell: false
+UXTerm*vt100.marginBell: false
+
+! selection.save_to_clipboard = true
+UXTerm*vt100.selectToClipboard: true
+! Alt as ESC prefix, which vim and tmux both expect.
+UXTerm*vt100.metaSendsEscape: true
+UXTerm*vt100.eightBitInput: false
+! Backspace sends the pty erase char instead of ^H, so it works inside vim.
+UXTerm*vt100.backarrowKey: false
+UXTerm*vt100.ptyInitialErase: true
+
+! Double-click word boundaries. Class 32 = break here, mirrors
+! selection.semantic_escape_chars; class 48 = part of a word, which keeps
+! paths and URLs in markdown selectable in one click.
+UXTerm*vt100.charClass: 33:48,35-38:48,42-43:48,45-47:48,59:48,61:48,64:48,92:48,94-95:48,126:48,34:32,39-41:32,44:32,58:32,60:32,62-63:32,91:32,93:32,96:32,123-125:32
+
+! keyboard.bindings. The trailing backslashes and \n\ separators are load
+! bearing: one malformed line makes xrdb drop the whole resource silently, and
+! every binding below is then lost. Check with: xrdb -query | grep translations
+UXTerm*vt100.translations: #override \
+    Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
+    Ctrl Shift <Key>V: insert-selection(CLIPBOARD) \n\
+    Shift <Key>Insert: insert-selection(PRIMARY) \n\
+    Ctrl <Key>equal: larger-vt-font() \n\
+    Ctrl <Key>plus: larger-vt-font() \n\
+    Ctrl <Key>minus: smaller-vt-font() \n\
+    Ctrl <Key>0: set-vt-font(d)

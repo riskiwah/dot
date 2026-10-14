@@ -41,7 +41,8 @@ cyan    = '#689d6a'
 white   = '#a89984'
 
 [colors.primary]
-background = "#1d2021"
+#background = "#1d2021"  # old (gruvbox hard) — uncomment to roll back
+background = "#0e171c"
 bright_foreground = "#f9f5d7"
 dim_foreground = "#f2e5bc"
 foreground = "#ebdbb2"

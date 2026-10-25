@@ -1,6 +1,7 @@
-# Gruvbox dark. Recolor is a toggle (r), not default: it inverts images/diagrams too.
+# Gruvbox dark. Recolor is a toggle (c), not default: it inverts images/diagrams too.
 
-set font "JetBrainsMono Nerd Font 10"
+# 11 not 10: Xft.dpi is 96 but the laptop panel is ~162 DPI, so 10pt renders ~2mm tall.
+set font "JetBrainsMono Nerd Font 11"
 
 set default-bg                "#282828"
 set default-fg                "#ebdbb2"
@@ -35,17 +36,29 @@ set recolor-keephue           true
 set recolor-reverse-video     true
 
 # Reading experience
-set adjust-open               best-fit
+# Width, not best-fit: best-fit shrinks a full page into the 1080px-tall external monitor.
+# Layout doesn't follow the monitor; switch with a (whole page), s (width), d / D (dual).
+# Only applies to files never opened before: history restores each file's last fit mode.
+set adjust-open               width
 set page-v-padding            4
 set page-h-padding            4
 set scroll-page-aware         true
 set scroll-step               80
+# Keep a sliver of the previous screen on page-down so the reading line isn't lost.
+set scroll-full-overlap       0.05
+set zoom-step                 10
 set selection-clipboard       clipboard
 set statusbar-home-tilde      true
+set statusbar-page-percent    true
 set window-title-basename     true
+set window-title-page         true
 set guioptions                sv
 
-map r recolor
+map r reload
+map R rotate
+map c recolor
 map d toggle_page_mode
+# Book spread: cover alone on the right, then facing pages. Saved per file in history.
+map D feedkeys ":set first-page-column 1:2<Return>:set pages-per-row 2<Return>"
 map J navigate next
 map K navigate previous

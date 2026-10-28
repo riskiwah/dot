@@ -14,6 +14,9 @@ dotconfig: ## dotconfig
 baseroot: ## baseroot
 	@bash $(CURDIR)/scripts/dothome.sh
 
+nvim: ## symlink lazyvim to ~/.config/nvim
+	ln -sfn "$(CURDIR)/lazyvim" "$(HOME)/.config/nvim"
+
 zsh: ## zsh
 	@bash $(CURDIR)/scripts/dotzsh.sh
 

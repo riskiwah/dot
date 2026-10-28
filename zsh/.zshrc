@@ -23,7 +23,7 @@ plugins=(git docker docker-compose kubectl gcloud)
 source $ZSH/oh-my-zsh.sh
 # Must come AFTER oh-my-zsh.sh: this file calls compdef on its first line, and
 # oh-my-zsh.sh is now the only thing that runs compinit (which defines compdef).
-source $ZSH/completions/_kubectl.zsh
+[[ -r $ZSH/completions/_kubectl.zsh ]] && source $ZSH/completions/_kubectl.zsh
 
 # pprof
 if [ -n "${ZSH_PROF_ENABLED:-}" ]; then

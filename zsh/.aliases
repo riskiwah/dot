@@ -17,7 +17,10 @@ else
   alias ls="ls -lF --color=auto"
   alias turnoff="systemctl poweroff -i"
   alias cleanup="sync;sudo sysctl -w vm.drop_caches=3"
-  alias pbcopy="xclip -selection clipboard"
-  alias pbpaste="xclip -selection clipboard -o"
-  alias power-profile="cat /sys/firmware/acpi/platform_profile"
+  # Functions, not aliases: the session type is checked when you run them, so one dotfile works
+  # under i3/X11 and niri/Wayland, and a tmux pane that outlives its session still picks the right tool.
+  pbcopy()  { if [[ -n $WAYLAND_DISPLAY ]] && (( $+commands[wl-copy] )); then wl-copy "$@"; else xclip -selection clipboard "$@"; fi }
+  pbpaste() { if [[ -n $WAYLAND_DISPLAY ]] && (( $+commands[wl-paste] )); then wl-paste "$@"; else xclip -selection clipboard -o "$@"; fi }
+  # only machines that expose a platform profile (not every ThinkPad does)
+  [[ -r /sys/firmware/acpi/platform_profile ]] && alias power-profile="cat /sys/firmware/acpi/platform_profile"
 fi

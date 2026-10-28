@@ -1,0 +1,64 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 26,
+    "spacing": 0,
+    "modules-left": ["niri/workspaces", "wlr/taskbar"],
+    "modules-center": [],
+    "modules-right": ["tray", "temperature", "cpu", "memory", "backlight", "battery", "network", "pulseaudio", "clock"],
+
+    "niri/workspaces": {
+        "format": "{name}"
+    },
+    "wlr/taskbar": {
+        "format": "{icon}",
+        "icon-size": 16,
+        "tooltip-format": "{title}",
+        "on-click": "activate",
+        "on-click-middle": "close"
+    },
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    },
+    "temperature": {
+        "thermal-zone": 9,
+        "critical-threshold": 85,
+        "format": "󰔏 {temperatureC}°C",
+        "format-critical": "󰔏 {temperatureC}°C"
+    },
+    "cpu": {
+        "format": "󰍛 {usage}%"
+    },
+    "memory": {
+        "format": "󰘚 {percentage}%"
+    },
+    "backlight": {
+        "format": "󰃟 {percent}%"
+    },
+    "battery": {
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰁹"],
+        "states": { "warning": 25, "critical": 10 }
+    },
+    "network": {
+        "format-wifi": "󰖩",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰖪",
+        "tooltip-format-wifi": "{essid} {signalStrength}%  {ipaddr}",
+        "tooltip-format": "{ifname} {ipaddr}",
+        "on-click": "alacritty --class nmtui -e nmtui"
+    },
+    "pulseaudio": {
+        "format": "{icon}",
+        "format-muted": "󰖁",
+        "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
+        "tooltip-format": "{desc} {volume}%",
+        "on-click": "pavucontrol"
+    },
+    "clock": {
+        "format": "|  {:%d %a · %I:%M %p}",
+        "tooltip": false
+    }
+}

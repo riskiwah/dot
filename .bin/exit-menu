@@ -1,0 +1,11 @@
+#!/bin/bash
+# fuzzel version of the i3 exit_mode (logout / sleep / reboot / poweroff)
+
+choice=$(printf '%s\n' logout sleep reboot poweroff | fuzzel --dmenu -p 'exit: ' --lines 4) || exit 0
+
+case "$choice" in
+  logout)   niri msg action quit --skip-confirmation ;;
+  sleep)    systemctl suspend-then-hibernate ;;
+  reboot)   systemctl reboot ;;
+  poweroff) systemctl poweroff -i ;;
+esac

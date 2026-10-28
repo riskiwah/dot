@@ -1,0 +1,137 @@
+/* gruvbox; layout modeled on a compact niri bar: workspaces + taskbar left, status right */
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 12px;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+}
+
+window#waybar {
+    background: #282828;
+    color: #ebdbb2;
+}
+
+/* workspaces: dim = has windows, filled amber = focused, outlined = visible on another output */
+#workspaces {
+    margin: 0 6px 0 4px;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    margin: 3px 2px;
+    background: transparent;
+    color: #928374;
+    border: 1px solid transparent;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+#workspaces button:hover {
+    background: #504945;
+    color: #ebdbb2;
+}
+
+/* i3-like: only show workspaces that have windows or are focused */
+#workspaces button.empty:not(.focused):not(.active) {
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+    font-size: 0;
+    color: transparent;
+    background: transparent;
+    border: none;
+}
+
+#workspaces button.empty:not(.focused):not(.active) label {
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+    min-height: 0;
+    font-size: 0;
+}
+
+/* visible on an unfocused output */
+#workspaces button.active {
+    padding: 0 8px;
+    margin: 3px 2px;
+    font-size: 12px;
+    background: #3c3836;
+    color: #ebdbb2;
+    border: 1px solid #d79921;
+}
+
+/* the focused workspace: solid fill, dark bold text */
+#workspaces button.focused {
+    padding: 0 8px;
+    margin: 3px 2px;
+    font-size: 12px;
+    font-weight: bold;
+    background: #d79921;
+    color: #282828;
+    border: 1px solid #fabd2f;
+}
+
+#workspaces button.urgent {
+    background: #fb4934;
+    color: #282828;
+}
+
+/* niri keeps one empty unnamed workspace last on each output; hide its button unless focused */
+#workspaces button:last-child:not(.focused) {
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+    font-size: 0;
+    background: transparent;
+    border: none;
+}
+
+/* window taskbar */
+#taskbar button {
+    padding: 0 6px;
+    margin: 2px 1px;
+    background: transparent;
+}
+
+#taskbar button.active {
+    background: #3c3836;
+    border-bottom: 2px solid #d79921;
+}
+
+#clock,
+#tray,
+#temperature,
+#pulseaudio,
+#backlight,
+#cpu,
+#memory,
+#network,
+#battery {
+    padding: 0 8px;
+}
+
+#clock {
+    padding-right: 10px;
+    color: #ebdbb2;
+}
+
+#temperature.critical {
+    color: #fb4934;
+}
+
+#battery.warning {
+    color: #fabd2f;
+}
+
+#battery.critical {
+    color: #fb4934;
+}
+
+#pulseaudio.muted {
+    color: #928374;
+}
+
+#network.disconnected {
+    color: #fb4934;
+}

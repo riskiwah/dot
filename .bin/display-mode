@@ -17,26 +17,48 @@ cat <<EOF >&2
 EOF
 }
 
+# Every output we don't configure gets an explicit --off. Skipping this leaves unplugged
+# outputs with a ghost crtc that i3 uses to clip the real screen.
+others_off() {
+    local out
+    for out in $(xrandr | awk '/ (dis)?connected/ {print $1}'); do
+        for keep in "$@"; do [ "$out" = "$keep" ] && continue 2; done
+        printf -- '--output %s --off ' "$out"
+    done
+}
+
+# Fail early with a clear message: xrandr rejects the whole call if one output is missing
+# or has no such mode, which would leave the screen layout untouched.
+require_connected() {
+    xrandr | grep -q "^$1 connected" || { echo "display-mode: $1 not connected" >&2; exit 1; }
+}
+
 case "$1" in
     --primary)
-        xrandr --output eDP-1 --primary --mode 1920x1200 --pos 0x0 --rotate normal --rate 60
+        xrandr --output eDP-1 --primary --mode 1920x1200 --pos 0x0 --rotate normal --rate 60 \
+            $(others_off eDP-1)
         ;;
     --dual)
+        require_connected DP-1
         xrandr \
             --output eDP-1 --primary --mode 1920x1200 --pos 0x1080 --rotate normal --rate 60 \
             --output DP-1 --mode 1920x1080 --pos 0x0 --rotate normal --rate 74 \
-            --output HDMI-1 --off --output DP-2 --off --output DP-3 --off --output DP-4 --off
+            $(others_off eDP-1 DP-1)
         ;;
     --hdmi)
+        require_connected HDMI-1
         xrandr \
             --output eDP-1 --primary --mode 1920x1200 --pos 0x1080 --rotate normal --rate 60 \
             --output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate normal --rate 60 \
-            --output DP-1 --off --output DP-2 --off --output DP-3 --off --output DP-4 --off
+            $(others_off eDP-1 HDMI-1)
         ;;
     # need some tunning for this mirrors
     --mirror)
+        require_connected DP-1
         xrandr \
-            --output eDP-1 --mode "1920x1080" --output DP-1 --mode "1920x1080" --scale 1x1 --panning 1920x1080
+            --output eDP-1 --primary --mode 1920x1080 --pos 0x0 \
+            --output DP-1 --mode 1920x1080 --pos 0x0 --same-as eDP-1 \
+            $(others_off eDP-1 DP-1)
         ;;
     *)
         help

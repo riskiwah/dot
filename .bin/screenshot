@@ -1,0 +1,32 @@
+#!/bin/bash
+# screenshot region|full|save
+#   region: drag a region -> clipboard
+#   full:   all monitors  -> clipboard
+#   save:   drag a region -> clipboard + ~/Pictures/screenshots/<timestamp>.png
+# Every successful capture raises a dunst toast with a thumbnail. Esc during
+# region select exits silently (scrot returns non-zero, set -e stops here).
+
+set -Eeuo pipefail
+
+mode=${1:?usage: screenshot region|full|save}
+save_dir="$HOME/Pictures/screenshots"
+# Fixed path (not a mktemp+trap) so dunst can still read the thumbnail after we exit.
+last="${XDG_RUNTIME_DIR:-/tmp}/screenshot-last.png"
+
+case $mode in
+    region|save) scrot -o -s -f -F "$last" ;;
+    full)        scrot -o -F "$last" ;;
+    *)           echo "unknown mode: $mode" >&2; exit 2 ;;
+esac
+
+xclip -selection clipboard -t image/png -i "$last"
+
+msg="Copied to clipboard"
+if [ "$mode" = save ]; then
+    mkdir -p "$save_dir"
+    dest="$save_dir/$(date +%F_%H-%M-%S).png"
+    cp "$last" "$dest"
+    msg="Saved + copied: ${dest#"$HOME"/}"
+fi
+
+notify-send -a screenshot -i "$last" -t 3000 "Screenshot" "$msg"

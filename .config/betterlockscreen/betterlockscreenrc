@@ -1,0 +1,40 @@
+# Flat Gruvbox lock: dimmed wallpaper (no blur), square login box, no ring circle.
+# Colours are RRGGBBAA. Accent #d79921 matches i3 focus, bar clock, rofi and dunst.
+# After editing, rebuild the cache: betterlockscreen -u ~/Pictures/wallpapers/catto.jpg --fx dim
+
+# Only build the dim effect: skips the slow blur/pixel variants we never use.
+fx_list=(dim)
+dim_level=45
+wallpaper_cmd="feh --bg-scale"
+quiet=false
+
+# Square panel behind the clock (betterlockscreen draws it as a plain rectangle).
+loginbox=1d2021cc
+loginshadow=00000000
+
+font="JetBrainsMono Nerd Font"
+time_format="%H:%M"
+timecolor=ebdbb2ff
+locktext="type password"
+greetercolor=a89984ff
+layoutcolor=a89984ff
+
+# i3lock-color's indicator is a circle and can't be squared, so the ring and its
+# fill are fully transparent. Only keyhl/bshl stay visible: a short yellow/grey
+# arc flashes per keypress as typing feedback. Set both to 00000000 for none at all.
+ringcolor=00000000
+insidecolor=00000000
+separatorcolor=00000000
+ringvercolor=00000000
+insidevercolor=00000000
+ringwrongcolor=00000000
+insidewrongcolor=00000000
+keyhlcolor=d79921ff
+bshlcolor=a89984ff
+
+veriftext="checking"
+verifcolor=ebdbb2ff
+wrongtext="wrong password"
+wrongcolor=fb4934ff
+modifcolor=fb4934ff
+bgcolor=282828ff

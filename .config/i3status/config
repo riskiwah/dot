@@ -1,29 +1,36 @@
+# Flat bar: monochrome Nerd Font icons, no emoji.
+# Hierarchy without extra colours: icons dim grey (#a89984), values cream, clock in the accent.
+# color_good is the normal text colour on purpose, so a healthy bar stays calm;
+# only degraded (yellow) / bad (red) states stand out. Icons stay grey even then.
 general {
   output_format = "i3bar"
   colors = true
+  color_good = "#ebdbb2"
+  color_degraded = "#d79921"
+  color_bad = "#fb4934"
   interval = 5
-	markup = pango
+  markup = pango
 }
 
-order += "tztime local"
+order += "volume master"
 order += "wireless _first_"
 #order += "ethernet _first_"
-order += "battery all"
 order += "disk /"
 order += "load"
 order += "memory"
-order += "volume master"
-
+order += "battery all"
+order += "tztime local"
 
 tztime local {
-  #format = "%Y-%m-%d %H:%M:%S"
-	format = "📅 %A, %e %B  🕒  %H:%M:%S "
+  # No seconds: with interval = 5 they always lag.
+  format = "<span color='#d79921'>󰥔  %a %d %b  %H:%M</span> "
+  separator_block_width = 18
 }
 
 wireless _first_ {
-  #format_up = "W: (%quality at %essid) %ip"
-	format_up = "📻 %essid"
-  format_down = "Disconnected"
+  format_up = "<span color='#a89984'>󰖩</span>  %essid"
+  format_down = "<span color='#a89984'>󰖪</span>  offline"
+  separator_block_width = 18
 }
 
 ethernet _first_ {
@@ -32,34 +39,49 @@ ethernet _first_ {
 }
 
 battery all {
-  format = " %status %percentage %remaining"
-	status_chr = "🔌"
-	status_bat = "⚡"
-	status_unk = "❓"
-	status_full = "🔋 "
+  format = "<span color='#a89984'>%status</span>  %percentage %remaining"
+  format_down = ""
+  status_chr = "󰂄"
+  status_bat = "󰁹"
+  # IDLE = plugged in but not charging (charge threshold reached).
+  status_idle = "󰚥"
+  status_unk = "󰁹"
+  status_full = "󰚥"
+  integer_battery_capacity = true
+  hide_seconds = true
   path = "/sys/class/power_supply/BAT%d/uevent"
-	low_threshold = 20
+  low_threshold = 20
+  separator_block_width = 18
 }
 
 disk "/" {
-  #format = "🖫 %avail"
-	format = "💾 %avail Available "
+  format = "<span color='#a89984'>󰋊</span>  %avail"
+  prefix_type = custom
+  low_threshold = 10
+  threshold_type = percentage_avail
+  separator_block_width = 18
 }
 
 load {
-  format = "📈 %5min Load"
+  format = "<span color='#a89984'>󰓅</span>  %1min"
+  max_threshold = 4
+  separator_block_width = 18
 }
 
 memory {
-  format = "🧠 %used/%total (%available free)"
+  format = "<span color='#a89984'>󰍛</span>  %used"
+  unit = "auto"
+  decimals = 1
   threshold_degraded = "1G"
-  format_degraded = "MEMORY LOW: %available free"
+  format_degraded = "<span color='#a89984'>󰍛</span>  LOW %available"
+  separator_block_width = 18
 }
 
 volume master {
-	format = "🎵 %volume "
-	format_muted = "🎵 muted (%volume) "
-	device = "default"
-	mixer = "Master"
-	mixer_idx = 0
+  format = "<span color='#a89984'>󰕾</span>  %volume"
+  format_muted = "<span color='#a89984'>󰖁</span>  muted"
+  device = "default"
+  mixer = "Master"
+  mixer_idx = 0
+  separator_block_width = 18
 }

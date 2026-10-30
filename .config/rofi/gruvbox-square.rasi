@@ -1,0 +1,84 @@
+/* Square Gruvbox launcher. Border colour matches i3 client.focused (#d79921). */
+* {
+  bg:        #282828;
+  bg-alt:    #3c3836;
+  fg:        #ebdbb2;
+  fg-dim:    #928374;
+  accent:    #d79921;
+  urgent:    #fb4934;
+
+  background-color: transparent;
+  text-color:       @fg;
+  border-radius:    0;
+  margin:           0;
+  padding:          0;
+  spacing:          0;
+}
+
+configuration {
+  font:         "JetBrainsMono Nerd Font 12";
+  show-icons:   true;
+  icon-theme:   "Yaru";
+  display-drun: "";
+}
+
+window {
+  location:         center;
+  width:            600px;
+  background-color: @bg;
+  border:           1px;
+  border-color:     @accent;
+}
+
+mainbox {
+  children: [ inputbar, listview ];
+}
+
+inputbar {
+  background-color: @bg-alt;
+  padding:          12px 14px;
+  spacing:          10px;
+  children:         [ prompt, entry ];
+}
+
+prompt {
+  text-color: @accent;
+}
+
+entry {
+  placeholder:       "search";
+  placeholder-color: @fg-dim;
+}
+
+listview {
+  lines:        10;
+  columns:      1;
+  fixed-height: true;
+  scrollbar:    false;
+  padding:      6px 0;
+}
+
+element {
+  padding:  8px 14px;
+  spacing:  12px;
+  children: [ element-icon, element-text ];
+}
+
+element-icon {
+  size:           1.4em;
+  vertical-align: 0.5;
+}
+
+element-text {
+  vertical-align: 0.5;
+}
+
+element selected.normal {
+  background-color: @accent;
+  text-color:       @bg;
+}
+
+element normal.urgent,
+element alternate.urgent {
+  text-color: @urgent;
+}

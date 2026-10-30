@@ -11,13 +11,18 @@ PRINT_ISSUE=true
 PRINT_MOTD=true
 
 # Preselected user, if AUTOLOGIN is enabled, this user is logged in.
-#DEFAULT_USER=user
+# Prefill the username only; AUTOLOGIN stays false, so the password is still required.
+DEFAULT_USER=extroot
 
 # Enables Autologin, if DEFAULT_USER is defined and part of nopasswdlogin group. Possible values are "true" or "false".
 AUTOLOGIN=false
 
 # The default session used, if Autologin is enabled. If session is not found in list of session, it proceeds to manual selection.
 # AUTOLOGIN_SESSION=i3
+
+# Preselect i3 for manual logins (niri is not installed on this host).
+DEFAULT_SESSION=i3
+DEFAULT_SESSION_ENV=xorg
 
 # If Autologin is enabled and session does not start correctly, the number of retries in short period is kept to eventually stop the infinite loop of restarts. -1 is for infinite retries, 0 is for no retry.
 # AUTOLOGIN_MAX_RETRY=2
@@ -62,7 +67,8 @@ LOGGING_FILE=/var/log/emptty/[TTY_NUMBER].log
 #ENABLE_NUMLOCK=false
 
 # Defines the way, how is logging of session errors handled. Possible values are "rotate", "appending" or "disabled".
-#SESSION_ERROR_LOGGING=disabled
+# Keep i3/X stderr from crashed sessions: /var/log/emptty/session-errors.7.log
+SESSION_ERROR_LOGGING=rotate
 
 # Overrides path of session errors log file
 #SESSION_ERROR_LOGGING_FILE=/var/log/emptty/session-errors.[TTY_NUMBER].log

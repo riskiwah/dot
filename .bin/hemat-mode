@@ -1,6 +1,6 @@
 #!/bin/bash
 
-systemd_services=(
+docker_services=(
   containerd.service
   docker.service
   docker.socket
@@ -12,14 +12,15 @@ platform_profile_path=/sys/firmware/acpi/platform_profile
 rapl_path=/sys/class/powercap/intel-rapl:0
 throttled_conf=/etc/throttled.conf
 
-stop_systemd() {
-  echo "stopping set of list systemd services"
-  sudo systemctl stop "${systemd_services[@]}"
+# docker.socket goes down with the service; otherwise the next `docker` call socket-activates it straight back.
+stop_docker() {
+  echo "stopping docker"
+  sudo systemctl stop "${docker_services[@]}"
 }
 
-start_systemd() {
-  echo "starting set of list systemd services"
-  sudo systemctl start "${systemd_services[@]}"
+start_docker() {
+  echo "starting docker"
+  sudo systemctl start "${docker_services[@]}"
 }
 
 # libvirt is never enabled at boot; it runs only between `qemu false` and `qemu true`.
@@ -172,7 +173,7 @@ run_checks() {
   info "external displays" "$(external_displays)"
 
   echo "services"
-  for service in "${systemd_services[@]}"; do
+  for service in "${docker_services[@]}"; do
     info "$service" "$(systemctl is-active "$service")"
   done
   if command -v virsh >/dev/null; then
@@ -188,7 +189,7 @@ game_mode() {
     echo "game mode needs the charger plugged in" >&2
     exit 1
   fi
-  stop_systemd
+  stop_docker
   stop_qemu || true
   stop_vbox || true
   if [ "$(capped_cpus)" -gt 0 ]; then
@@ -208,18 +209,21 @@ usage() {
   local code=${1:-1}
   cat <<EOF >&$((code == 0 ? 1 : 2))
 Usage: hemat-mode <command>
-       hemat-mode <qemu|vbox> <true|false>
+       hemat-mode <docker|qemu|vbox> <true|false>
 
 "true" turns saving ON (stops things), "false" turns it OFF (starts things).
 
 Everyday
-  true          Stop ${systemd_services[*]},
-                libvirt/qemu and VirtualBox modules
-  false         Start ${systemd_services[*]}
+  true          Stop docker, libvirt/qemu and VirtualBox modules
+  false         Start docker only
                 (libvirt and VirtualBox stay off; use the commands below)
   game          Same as "true", then check turbo, PL1, GPU and platform
                 profile; exits 1 if any check fails (charger required)
   status        Show power, CPU, GPU and service state; changes nothing
+
+Single component
+  docker true   Stop ${docker_services[*]}
+  docker false  Start ${docker_services[*]}
 
 Vagrant providers (refuse to stop while a VM is running: 'vagrant halt' first)
   qemu true     Stop libvirt, its networks and their dnsmasq
@@ -231,6 +235,7 @@ Vagrant providers (refuse to stop while a VM is running: 'vagrant halt' first)
 
 Examples
   hemat-mode game                        # before playing
+  hemat-mode docker false                # docker only, VMs stay off
   hemat-mode vbox false && vagrant up    # start a VirtualBox dev box
 EOF
   exit "$code"
@@ -238,18 +243,10 @@ EOF
 
 main() {
   case "$1" in -h | --help | help) usage 0 ;; esac
-  if [ "$1" = qemu ] && [ $# -eq 2 ]; then
-    case "$2" in
-      true) stop_qemu ;;
-      false) start_qemu ;;
-      *) usage ;;
-    esac
-    return
-  fi
-  if [ "$1" = vbox ] && [ $# -eq 2 ]; then
-    case "$2" in
-      true) stop_vbox ;;
-      false) start_vbox ;;
+  if [ $# -eq 2 ]; then
+    case "$1:$2" in
+      docker:true | qemu:true | vbox:true) "stop_$1" ;;
+      docker:false | qemu:false | vbox:false) "start_$1" ;;
       *) usage ;;
     esac
     return
@@ -260,12 +257,12 @@ main() {
 
   case "$1" in
     true)
-      stop_systemd
+      stop_docker
       stop_qemu
       stop_vbox
       ;;
     false)
-      start_systemd
+      start_docker
       ;;
     game)
       game_mode

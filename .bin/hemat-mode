@@ -6,28 +6,254 @@ systemd_services=(
   docker.socket
 )
 
+# On AC, TLP and throttled already apply the game settings; these paths are only read to catch a broken setup.
+no_turbo_path=/sys/devices/system/cpu/intel_pstate/no_turbo
+platform_profile_path=/sys/firmware/acpi/platform_profile
+rapl_path=/sys/class/powercap/intel-rapl:0
+throttled_conf=/etc/throttled.conf
+
 stop_systemd() {
   echo "stopping set of list systemd services"
-  sudo -s -- <<EOF
-  systemctl stop ${systemd_services[@]}
-EOF
+  sudo systemctl stop "${systemd_services[@]}"
 }
 
 start_systemd() {
   echo "starting set of list systemd services"
-  sudo -s -- <<EOF
-  systemctl start ${systemd_services[@]}
-EOF
+  sudo systemctl start "${systemd_services[@]}"
 }
 
+# libvirt is never enabled at boot; it runs only between `qemu false` and `qemu true`.
+virsh_sys() {
+  sudo virsh -q -c qemu:///system "$@"
+}
+
+libvirt_dnsmasq_count() {
+  pgrep -fc 'dnsmasq.*libvirt' || true
+}
+
+stop_qemu() {
+  command -v virsh >/dev/null || return 0
+  # Hard-killing a running test VM can corrupt its disk; leave everything up and say why.
+  if systemctl is-active -q libvirtd.service && [ -n "$(virsh_sys list --name)" ]; then
+    echo "qemu: VMs still running, run 'vagrant halt' first; libvirt left up" >&2
+    return 1
+  fi
+  echo "stopping libvirt networks, dnsmasq and daemons"
+  # Stopping libvirtd alone leaves each network's dnsmasq running, so networks go first.
+  if systemctl is-active -q libvirtd.service; then
+    local net
+    for net in $(virsh_sys net-list --name); do
+      virsh_sys net-destroy "$net" >/dev/null
+    done
+  fi
+  # Globs match only loaded units, so this covers both monolithic libvirtd and modular virt*d plus their sockets.
+  sudo systemctl stop 'libvirtd*' 'virt*'
+  [ "$(libvirt_dnsmasq_count)" -eq 0 ] || sudo pkill -f 'dnsmasq.*libvirt'
+}
+
+start_qemu() {
+  echo "starting libvirtd"
+  sudo systemctl start libvirtd.service
+}
+
+# Dependents first: modprobe -r refuses to drop vboxdrv while vboxnet* still hold it.
+vbox_modules=(vboxnetflt vboxnetadp vboxdrv)
+
+vbox_loaded() {
+  [ -d /sys/module/vboxdrv ]
+}
+
+stop_vbox() {
+  vbox_loaded || return 0
+  # VMs run under the user's VBoxSVC, so query as the user, not root.
+  if command -v VBoxManage >/dev/null && [ -n "$(VBoxManage list runningvms 2>/dev/null)" ]; then
+    echo "vbox: VMs still running, run 'vagrant halt' first; modules left loaded" >&2
+    return 1
+  fi
+  echo "unloading VirtualBox kernel modules"
+  sudo modprobe -r "${vbox_modules[@]}"
+}
+
+# vboxnet* host-only interfaces vanish on unload; VirtualBox/Vagrant recreate them on the next `vagrant up`.
+start_vbox() {
+  echo "loading VirtualBox kernel modules"
+  sudo modprobe -a vboxdrv vboxnetadp vboxnetflt
+}
+
+on_ac() {
+  local supply
+  for supply in /sys/class/power_supply/*; do
+    [ "$(cat "$supply/type" 2>/dev/null)" = Battery ] && continue
+    [ "$(cat "$supply/online" 2>/dev/null)" = 1 ] && return 0
+  done
+  return 1
+}
+
+gpu_dir() {
+  local rp0
+  for rp0 in /sys/class/drm/card*/gt_RP0_freq_mhz; do
+    [ -e "$rp0" ] && dirname "$rp0" && return
+  done
+}
+
+external_displays() {
+  # "enabled" rather than "status": a plugged-in screen turned off with `display-mode --primary` costs no bandwidth.
+  local enabled active=()
+  for enabled in /sys/class/drm/card*-*/enabled; do
+    case "$enabled" in */card*-eDP-*) continue ;; esac
+    [ "$(cat "$enabled" 2>/dev/null)" = enabled ] && active+=("$(basename "$(dirname "$enabled")")")
+  done
+  if [ ${#active[@]} -eq 0 ]; then echo none; else echo "${active[*]}"; fi
+}
+
+# Seen 2026-11-14: after turbo was re-enabled on AC, every core kept scaling_max_freq at its base clock,
+# so turbo read "on" while the CPU never boosted (Dota at ~20 FPS with the GPU idle).
+capped_cpus() {
+  local policy capped=0
+  for policy in /sys/devices/system/cpu/cpufreq/policy*; do
+    [ "$(cat "$policy/scaling_max_freq")" = "$(cat "$policy/cpuinfo_max_freq")" ] || capped=$((capped + 1))
+  done
+  echo "$capped"
+}
+
+uncap_cpus() {
+  local policy
+  for policy in /sys/devices/system/cpu/cpufreq/policy*; do
+    cat "$policy/cpuinfo_max_freq" | sudo tee "$policy/scaling_max_freq" >/dev/null
+  done
+}
+
+expected_ac_pl1_watts() {
+  awk -F': *' '/^\[/ { section = $0 } section == "[AC]" && $1 == "PL1_Tdp_W" { print $2 }' "$throttled_conf" 2>/dev/null
+}
+
+failed_checks=0
+
+check() {
+  local label=$1 actual=$2 expected=$3
+  if [ "$actual" = "$expected" ]; then
+    printf '  ok    %-18s %s\n' "$label" "$actual"
+  else
+    printf '  WARN  %-18s %s (want %s)\n' "$label" "${actual:-unknown}" "$expected"
+    failed_checks=$((failed_checks + 1))
+  fi
+}
+
+info() {
+  printf '  info  %-18s %s\n' "$1" "$2"
+}
+
+run_checks() {
+  local gpu pl1_uw pl2_uw expected_pl1 service
+  failed_checks=0
+
+  echo "power and performance"
+  if on_ac; then check "power source" AC AC; else check "power source" battery AC; fi
+  check "turbo" "$([ "$(cat "$no_turbo_path" 2>/dev/null)" = 0 ] && echo on || echo off)" on
+  check "capped CPUs" "$(capped_cpus)" 0
+  check "platform profile" "$(cat "$platform_profile_path" 2>/dev/null)" performance
+  check "throttled" "$(systemctl is-active throttled.service)" active
+
+  # throttled reapplies its AC limits every few seconds, so a mismatch right after plugging in can be transient.
+  pl1_uw=$(cat "$rapl_path/constraint_0_power_limit_uw" 2>/dev/null)
+  pl2_uw=$(cat "$rapl_path/constraint_1_power_limit_uw" 2>/dev/null)
+  expected_pl1=$(expected_ac_pl1_watts)
+  check "PL1 watts" "$((${pl1_uw:-0} / 1000000))" "${expected_pl1:-unknown}"
+  info "PL2 watts" "$((${pl2_uw:-0} / 1000000))"
+
+  gpu=$(gpu_dir)
+  if [ -n "$gpu" ]; then
+    check "GPU max MHz" "$(cat "$gpu/gt_max_freq_mhz")" "$(cat "$gpu/gt_RP0_freq_mhz")"
+    info "GPU now MHz" "$(cat "$gpu/gt_act_freq_mhz")"
+  else
+    check "GPU max MHz" "" "RP0 (no i915 card found)"
+  fi
+  # Info, not a check: HDMI stays on by choice, though on single-channel RAM each extra screen takes GPU memory bandwidth.
+  info "external displays" "$(external_displays)"
+
+  echo "services"
+  for service in "${systemd_services[@]}"; do
+    info "$service" "$(systemctl is-active "$service")"
+  done
+  if command -v virsh >/dev/null; then
+    info "libvirtd.service" "$(systemctl is-active libvirtd.service)"
+    info "libvirt dnsmasq" "$(libvirt_dnsmasq_count) process(es)"
+  fi
+  info "vbox modules" "$(vbox_loaded && echo loaded || echo unloaded)"
+}
+
+game_mode() {
+  # On battery TLP keeps turbo off and the 55% charge cap gives about an hour, so refuse instead of half-tuning.
+  if ! on_ac; then
+    echo "game mode needs the charger plugged in" >&2
+    exit 1
+  fi
+  stop_systemd
+  stop_qemu || true
+  stop_vbox || true
+  if [ "$(capped_cpus)" -gt 0 ]; then
+    echo "restoring CPU max frequency to the hardware limit"
+    uncap_cpus
+  fi
+  run_checks
+  if [ "$failed_checks" -gt 0 ]; then
+    echo "$failed_checks check(s) failed; FPS will be lower until fixed" >&2
+    exit 1
+  fi
+  echo "ready to play"
+}
+
+# -h prints to stdout and exits 0; a bad invocation prints to stderr and exits 1.
 usage() {
-  echo "Usage: hemat-mode <true|false>"
-  echo "  true  - stop set list of systemd services"
-  echo "  false - start set list of systemd services"
-  exit 1
+  local code=${1:-1}
+  cat <<EOF >&$((code == 0 ? 1 : 2))
+Usage: hemat-mode <command>
+       hemat-mode <qemu|vbox> <true|false>
+
+"true" turns saving ON (stops things), "false" turns it OFF (starts things).
+
+Everyday
+  true          Stop ${systemd_services[*]},
+                libvirt/qemu and VirtualBox modules
+  false         Start ${systemd_services[*]}
+                (libvirt and VirtualBox stay off; use the commands below)
+  game          Same as "true", then check turbo, PL1, GPU and platform
+                profile; exits 1 if any check fails (charger required)
+  status        Show power, CPU, GPU and service state; changes nothing
+
+Vagrant providers (refuse to stop while a VM is running: 'vagrant halt' first)
+  qemu true     Stop libvirt, its networks and their dnsmasq
+  qemu false    Start libvirtd
+  vbox true     Unload VirtualBox kernel modules
+  vbox false    Load VirtualBox kernel modules
+
+  -h, --help    Show this help
+
+Examples
+  hemat-mode game                        # before playing
+  hemat-mode vbox false && vagrant up    # start a VirtualBox dev box
+EOF
+  exit "$code"
 }
 
 main() {
+  case "$1" in -h | --help | help) usage 0 ;; esac
+  if [ "$1" = qemu ] && [ $# -eq 2 ]; then
+    case "$2" in
+      true) stop_qemu ;;
+      false) start_qemu ;;
+      *) usage ;;
+    esac
+    return
+  fi
+  if [ "$1" = vbox ] && [ $# -eq 2 ]; then
+    case "$2" in
+      true) stop_vbox ;;
+      false) start_vbox ;;
+      *) usage ;;
+    esac
+    return
+  fi
   if [ $# -ne 1 ]; then
     usage
   fi
@@ -35,9 +261,17 @@ main() {
   case "$1" in
     true)
       stop_systemd
+      stop_qemu
+      stop_vbox
       ;;
     false)
       start_systemd
+      ;;
+    game)
+      game_mode
+      ;;
+    status)
+      run_checks
       ;;
     *)
       usage

@@ -21,3 +21,6 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 # Bun
 export PATH="/home/extroot/.bun/bin:$PATH"
+
+# herdr-core (hc)
+export PATH="$HOME/.local/bin:$PATH"
